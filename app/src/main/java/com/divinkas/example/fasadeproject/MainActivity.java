@@ -4,13 +4,13 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
 
-import com.divinkas.example.fasadeproject.utils.ICallbackConverter;
-import com.divinkas.example.fasadeproject.utils.MapperBuilder;
+import com.divinkas.example.fasadeproject.utils.MapperStrategy;
+import com.divinkas.example.fasadeproject.utils.mapper.BaseMapper;
 import com.divinkas.example.fasadeproject.utils.mapper.TicketMapper;
 import com.divinkas.example.fasadeproject.viewmodel.model.TicketModel;
 import com.divinkas.example.fasadeproject.viewmodel.response.TicketResponse;
 
-public class MainActivity extends AppCompatActivity implements ICallbackConverter<TicketModel> {
+public class MainActivity extends AppCompatActivity implements BaseMapper.ICallbackConverter<TicketModel> {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,12 +24,12 @@ public class MainActivity extends AppCompatActivity implements ICallbackConverte
         response.setDateTicket("12-12-2019");
 
         // convert data
-        MapperBuilder<TicketModel> mapperBuilder = new MapperBuilder<>(new TicketMapper());
-        mapperBuilder.convert(response, this);
+        MapperStrategy<TicketModel> mapperBuilder = new MapperStrategy<>(new TicketMapper(this));
+        mapperBuilder.convert(response);
     }
 
     @Override
-    public void setModel(TicketModel model) {
+    public void onModelConverted(TicketModel model) {
         // use converted data
         int id = model.getId();
     }

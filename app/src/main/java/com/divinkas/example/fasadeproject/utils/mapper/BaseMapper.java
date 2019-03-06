@@ -3,19 +3,21 @@ package com.divinkas.example.fasadeproject.utils.mapper;
 import android.os.Handler;
 import android.os.Looper;
 
-import com.divinkas.example.fasadeproject.utils.ICallbackConverter;
 import com.divinkas.example.fasadeproject.viewmodel.response.BaseResponse;
 
 public abstract class BaseMapper<T> {
-    protected T model;
+    public ICallbackConverter<T> callback;
 
-    public BaseMapper(T model) {
-        this.model = model;
+    public BaseMapper(ICallbackConverter<T> callback) {
+        this.callback = callback;
     }
 
-    public abstract void onMapped(BaseResponse response, ICallbackConverter<T> callback);
+    public abstract void convertResponse(BaseResponse response);
 
-    protected void sendToMain(T model, ICallbackConverter<T> callback){
-        new Handler(Looper.getMainLooper()).post(() -> callback.setModel(model));
+    protected void onMapped(T model, ICallbackConverter<T> callback){
+        new Handler(Looper.getMainLooper()).post(() -> callback.onModelConverted(model));
+    }
+    public interface ICallbackConverter<T> {
+        void onModelConverted(T model);
     }
 }
